@@ -8,7 +8,6 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
-import com.garland.graphics.Render;
 import com.garland.graphics.Screen;
 
 public class Display extends Canvas implements Runnable {
@@ -18,7 +17,6 @@ public class Display extends Canvas implements Runnable {
 
     private Thread thread;
     private boolean running = false;
-    private Render render;
     private Screen screen;
     private BufferedImage img;
     private int[] pixels;
