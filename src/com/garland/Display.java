@@ -1,8 +1,15 @@
 package com.garland;
 
 import java.awt.Canvas;
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
+
+import com.garland.graphics.Render;
+import com.garland.graphics.Screen;
 
 public class Display extends Canvas implements Runnable {
     public static final int WIDTH = 800;
@@ -11,6 +18,17 @@ public class Display extends Canvas implements Runnable {
 
     private Thread thread;
     private boolean running = false;
+    private Render render;
+    private Screen screen;
+    private BufferedImage img;
+    private int[] pixels;
+
+    public Display() {
+        screen = new Screen(WIDTH, HEIGHT);
+        img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+        pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
+
+    }
 
     public void start() {
         if (running) return;
@@ -44,7 +62,22 @@ public class Display extends Canvas implements Runnable {
     }
 
     private void render() {
-        
+        BufferStrategy bs = this.getBufferStrategy();
+        if (bs == null) {
+            createBufferStrategy(3);
+            return;
+        }
+
+        screen.render();
+
+        for (int i = 0; i < WIDTH * HEIGHT; i++) {
+            pixels[i] = screen.pixels[i];
+
+        }
+        Graphics g = bs.getDrawGraphics();
+        g.drawImage(img, 0, 0, WIDTH, HEIGHT, null);
+        g.dispose();
+        bs.show();
     }
 
     public static void main(String[] args) {
