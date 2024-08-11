@@ -1,6 +1,7 @@
 package com.garland;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -13,6 +14,7 @@ import com.garland.graphics.Screen;
 public class Display extends Canvas implements Runnable {
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
+    public static int FPS = 0;
     public static final String TITLE = "Garland Pre-Alpha 0.0";
 
     private Thread thread;
@@ -48,10 +50,20 @@ public class Display extends Canvas implements Runnable {
     }
 
     public void run() {
+        createBufferStrategy(3);
+        BufferStrategy bs = this.getBufferStrategy();
+        int frames = 0;
+        long last = System.nanoTime();
         while(running) {
             tick();
-            render();
-            
+            render(bs);
+            frames++;
+            long currentTime = System.nanoTime();
+            if (currentTime - last > 1000000000) {
+                FPS = frames;
+                frames = 0;
+                last = currentTime;
+            }
         }
     }
 
@@ -59,13 +71,7 @@ public class Display extends Canvas implements Runnable {
 
     }
 
-    private void render() {
-        BufferStrategy bs = this.getBufferStrategy();
-        if (bs == null) {
-            createBufferStrategy(3);
-            return;
-        }
-
+    private void render(BufferStrategy bs) {
         screen.render();
 
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
@@ -74,6 +80,8 @@ public class Display extends Canvas implements Runnable {
         }
         Graphics g = bs.getDrawGraphics();
         g.drawImage(img, 0, 0, WIDTH, HEIGHT, null);
+        g.setColor(Color.GREEN);
+        g.drawString("FPS: " + FPS, 10, 20);
         g.dispose();
         bs.show();
     }
@@ -82,12 +90,12 @@ public class Display extends Canvas implements Runnable {
         Display game = new Display();
         JFrame frame = new JFrame();
         frame.add(game);
+        frame.setResizable(false);
         frame.pack();
         frame.setTitle(TITLE);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(WIDTH, HEIGHT);
         frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
         frame.setVisible(true);
         game.start();
     }

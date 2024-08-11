@@ -22,6 +22,10 @@ public class Render {
                 if (yPix < 0 || yPix >= height) {
                     continue;
                 }
+                // int alpha = render.pixels[x + y * render.width];
+                // if (alpha > 0) {
+                //     pixels[xPix + yPix * width] = alpha;
+                // } 
                 pixels[xPix + yPix * width] = render.pixels[x + y * render.width];
             }
         }
