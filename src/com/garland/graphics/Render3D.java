@@ -8,22 +8,11 @@ public class Render3D extends Render {
 
     public void floorAndCeiling() {
 
-        double yDepth = 0;
-        double z = 0;
-        double xDepth = 0;
-
-        int xPix = 0;
-
-        for (int y = 0; y < height; y++) {
-            yDepth = y - height / 2;
-            z = 100.0 / yDepth;
-
+        for (int y = 100; y < 101; y++) {  // Draw a single horizontal line at y = 100
             for (int x = 0; x < width; x++) {
-                xDepth = x - width / 2;
-                xDepth *= z;
-                xPix = (int) (xDepth) & 15;
-                pixels[x + y * width] = xPix * 128;
+                pixels[x + y * width] = 0xFF0000; // Red color
             }
         }
+        
     }
 }

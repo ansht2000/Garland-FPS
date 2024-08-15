@@ -79,12 +79,12 @@ public class Display extends Canvas implements Runnable {
 
     private void render(BufferStrategy bs) {
         screen.render(game);
-
         for (int i = 0; i < WIDTH * HEIGHT; i++) {
             pixels[i] = screen.pixels[i];
 
         }
         Graphics g = bs.getDrawGraphics();
+        g.clearRect(0, 0, WIDTH, HEIGHT);
         g.drawImage(img, 0, 0, WIDTH, HEIGHT, null);
         g.setColor(Color.GREEN);
         g.drawString("FPS: " + FPS, 10, 20);
@@ -93,6 +93,9 @@ public class Display extends Canvas implements Runnable {
     }
 
     public static void main(String[] args) {
+
+        System.setProperty("sun.java2d.uiScale", "2.0");
+
         Display game = new Display();
         JFrame frame = new JFrame();
         frame.add(game);
