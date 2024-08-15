@@ -1,7 +1,6 @@
 package com.garland.graphics;
 
 import java.util.Arrays;
-import java.util.Random;
 
 import com.garland.Game;
 
@@ -16,7 +15,7 @@ public class Screen extends Render {
 
     public void render(Game game) {
         Arrays.fill(pixels, 0);
-        test_object3D.floorAndCeiling();
+        test_object3D.floorAndCeiling(game);
         draw(test_object3D, 0, 0);
     }
 }

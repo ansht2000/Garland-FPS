@@ -11,6 +11,7 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
 import com.garland.graphics.Screen;
+import com.garland.input.InputHandler;
 
 public class Display extends Canvas implements Runnable {
     public static final int WIDTH = 800;
@@ -24,6 +25,7 @@ public class Display extends Canvas implements Runnable {
     private Game game;
     private BufferedImage img;
     private int[] pixels;
+    private InputHandler input;
 
     public Display() {
         Dimension size = new Dimension(WIDTH, HEIGHT);
@@ -34,6 +36,11 @@ public class Display extends Canvas implements Runnable {
         img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
         game = new Game();
+        input = new InputHandler();
+        addKeyListener(input);
+        addFocusListener(input);
+        addMouseListener(input);
+        addMouseMotionListener(input);
     }
 
     public void start() {
@@ -74,7 +81,7 @@ public class Display extends Canvas implements Runnable {
     }
 
     private void tick() {
-        game.tick();
+        game.tick(input.key);
     }
 
     private void render(BufferStrategy bs) {
@@ -84,7 +91,6 @@ public class Display extends Canvas implements Runnable {
 
         }
         Graphics g = bs.getDrawGraphics();
-        g.clearRect(0, 0, WIDTH, HEIGHT);
         g.drawImage(img, 0, 0, WIDTH, HEIGHT, null);
         g.setColor(Color.GREEN);
         g.drawString("FPS: " + FPS, 10, 20);
@@ -105,6 +111,7 @@ public class Display extends Canvas implements Runnable {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        game.requestFocusInWindow();
         game.start();
     }
 }
