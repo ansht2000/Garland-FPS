@@ -16,6 +16,7 @@ public class Screen extends Render {
     public void render(Game game) {
         Arrays.fill(pixels, 0);
         test_object3D.floorAndCeiling(game);
+        test_object3D.limitRenderDistance();
         draw(test_object3D, 0, 0);
     }
 }
